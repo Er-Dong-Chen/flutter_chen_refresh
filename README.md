@@ -35,7 +35,7 @@ add this line to pubspec.yaml
 
    dependencies:
 
-    flutter_chen_refresh: ^2.0.0
+    flutter_chen_refresh: ^3.0.0
 
 
 ```
@@ -300,7 +300,7 @@ Add SmartRefresher, see my two examples [Example 1](example/lib/other/refresh_an
 
 ## Thanks
 
-[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
+[pull_to_refresh](https://github.com/peng8350/flutter_pulltorefresh)
 
 ## LICENSE
 

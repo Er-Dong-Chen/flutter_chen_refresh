@@ -33,7 +33,7 @@
 
    dependencies:
 
-    flutter_chen_refresh: ^2.0.0
+    flutter_chen_refresh: ^3.0.0
 
 
 ```
@@ -282,8 +282,7 @@
 
 ## 感谢
 
-[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
-
+[pull_to_refresh](https://github.com/peng8350/flutter_pulltorefresh)
 
 ## 开源协议
 
