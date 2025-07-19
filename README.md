@@ -11,7 +11,7 @@
 
 ## Intro
 a widget provided to the flutter scroll component drop-down refresh and pull up load.support android and ios.
-If you are Chinese,click here([中文文档](https://github.com/peng8350/flutter_pulltorefresh/blob/master/README_CN.md))
+If you are Chinese,click here([中文文档](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/README_CN.md))
 
 ### [Online Demo](https://er-dong-chen.github.io/flutter_chen_refresh/)
 
@@ -177,6 +177,45 @@ attributes that are not empty.
 
 ```
 
+NestedScrollView
+
+```
+    SmartRefresher.builder(
+        controller: _refreshController,
+        enablePullDown: true,
+        enablePullUp: true,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        builder: (context, physics) {
+          return NestedScrollView(
+            physics: physics,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [],
+            body: CustomScrollView(
+              physics: physics,
+              slivers: [
+                ClassicHeader(), // header
+                SliverAppBar(
+                  expandedHeight: 200.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text('Header'),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => ListTile(
+                      title: Text('Item #$index'),
+                    ),
+                    childCount: _itemCount,
+                  ),
+                ),
+                ClassicFooter(), // footer
+              ],
+            ),
+          );
+        },
+      )
+
+```
 
 ## ScreenShots
 
@@ -207,11 +246,11 @@ attributes that are not empty.
 | RefreshStyle.Follow <br>![Follow](example/images/refreshstyle1.gif)|RefreshStyle.UnFollow <br> ![不跟随](example/images/refreshstyle2.gif)| LoadStyle.ShowAlways <br>  ![永远显示](example/images/loadstyle1.gif) | LoadStyle.HideAlways<br> ![永远隐藏](example/images/loadstyle2.gif)|
 | RefreshStyle.Behind <br> ![背部](example/images/refreshstyle3.gif)| RefreshStyle.Front <br> ![前面悬浮](example/images/refreshstyle4.gif)| LoadStyle.ShowWhenLoading<br>  ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
 
-|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
+|Style| [ClassicIndicator](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/material_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 || ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) | ![](example/images/material_classic.gif) |
 
-|Style|  [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [Shimmer Indicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
+|Style|  [WaterDropMaterialHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/material_indicator.dart) | [Shimmer Indicator](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 ||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
 
@@ -300,7 +339,7 @@ Add SmartRefresher, see my two examples [Example 1](example/lib/other/refresh_an
 
 ## Thanks
 
-[pull_to_refresh](https://github.com/peng8350/flutter_pulltorefresh)
+[pull_to_refresh](https://github.com/Er-Dong-Chen/flutter_chen_refresh)
 
 ## LICENSE
 

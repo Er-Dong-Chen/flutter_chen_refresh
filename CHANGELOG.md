@@ -1,3 +1,6 @@
+## 3.0.1
+* Update README
+
 ## 3.0.0
 * Support flutter3 and added nestedScrollView example
 

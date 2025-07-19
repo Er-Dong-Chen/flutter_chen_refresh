@@ -173,6 +173,46 @@
 
 ```
 
+NestedScrollView
+
+```
+    SmartRefresher.builder(
+        controller: _refreshController,
+        enablePullDown: true,
+        enablePullUp: true,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        builder: (context, physics) {
+          return NestedScrollView(
+            physics: physics,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [],
+            body: CustomScrollView(
+              physics: physics,
+              slivers: [
+                ClassicHeader(), // header
+                SliverAppBar(
+                  expandedHeight: 200.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text('Header'),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => ListTile(
+                      title: Text('Item #$index'),
+                    ),
+                    childCount: _itemCount,
+                  ),
+                ),
+                ClassicFooter(), // footer
+              ],
+            ),
+          );
+        },
+      )
+
+```
+
 
 
 ## 截图
@@ -197,11 +237,11 @@
 | RefreshStyle.Follow <br> ![跟随](example/images/refreshstyle1.gif) |RefreshStyle.UnFollow <br>  ![不跟随](example/images/refreshstyle2.gif)| LoadStyle.ShowAlways <br> ![永远显示](example/images/loadstyle1.gif) | LoadStyle.HideAlways<br>  ![永远隐藏](example/images/loadstyle2.gif)|
 | RefreshStyle.Behind <br> ![背部](example/images/refreshstyle3.gif)| RefreshStyle.Front <br> ![前面悬浮](example/images/refreshstyle4.gif)| LoadStyle.ShowWhenLoading<br> ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
 
-|Style| [ClassicIndicator](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) |
+|Style| [ClassicIndicator](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/material_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 || ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) | ![](example/images/material_classic.gif) |
 
-|Style|  [WaterDropMaterialHeader](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/material_indicator.dart) | [Bezier+circle](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/peng8350/flutter_pulltorefresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
+|Style|  [WaterDropMaterialHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/material_indicator.dart) | [Bezier+circle](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
 |:---:|:---:|:---:|:---:|
 ||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
 
@@ -282,7 +322,7 @@
 
 ## 感谢
 
-[pull_to_refresh](https://github.com/peng8350/flutter_pulltorefresh)
+[pull_to_refresh](https://github.com/Er-Dong-Chen/flutter_chen_refresh)
 
 ## 开源协议
 
