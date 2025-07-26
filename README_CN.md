@@ -13,6 +13,7 @@
 一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios<br>
 
 ### [Demo示例](https://er-dong-chen.github.io/flutter_chen_refresh/)
+### [最佳搭配](https://github.com/Er-Dong-Chen/flutter-common/blob/master/docs/refresh.md)
 
 ## 特性
 * 提供上拉加载和下拉刷新

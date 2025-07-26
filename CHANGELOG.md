@@ -1,3 +1,6 @@
+## 3.0.2
+* Added Best match
+
 ## 3.0.1
 * Update README
 
