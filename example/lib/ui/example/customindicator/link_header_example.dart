@@ -155,8 +155,9 @@ class _SimpleLinkBarState extends State<SimpleLinkBar>
   @override
   void onOffsetChange(double offset) {
     // TODO: implement onOffsetChange
-    if (_status != RefreshStatus.refreshing)
+    if (_status != RefreshStatus.refreshing) {
       _animationController.value = offset / 80.0;
+    }
     super.onOffsetChange(offset);
   }
 

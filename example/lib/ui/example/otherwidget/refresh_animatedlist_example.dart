@@ -41,10 +41,11 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
       item: _list[index],
       selected: _selectedItem == _list[index],
       onTap: () {
-        if (mounted)
+        if (mounted) {
           setState(() {
             _selectedItem = _selectedItem == _list[index] ? null : _list[index];
           });
+        }
       },
     );
   }
@@ -77,10 +78,11 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
   void _remove() {
     if (_selectedItem != null) {
       _list.removeAt(_list.indexOf(_selectedItem!));
-      if (mounted)
+      if (mounted) {
         setState(() {
           _selectedItem = null;
         });
+      }
     }
   }
 
@@ -199,8 +201,9 @@ class CardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.bodyLarge!;
-    if (selected)
+    if (selected) {
       textStyle = textStyle.copyWith(color: Colors.lightGreenAccent[400]);
+    }
     return new Padding(
       padding: const EdgeInsets.all(2.0),
       child: new SizeTransition(

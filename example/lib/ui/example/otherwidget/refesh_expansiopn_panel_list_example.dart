@@ -33,10 +33,11 @@ class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList> {
   Widget _buildPanel() {
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             _data[index].isExpanded = !isExpanded;
           });
+        }
       },
       children: _data.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
@@ -50,10 +51,11 @@ class RefreshExpansionPanelListState extends State<RefreshExpansionPanelList> {
               subtitle: Text('To delete this panel, tap the trash can icon'),
               trailing: Icon(Icons.delete),
               onTap: () {
-                if (mounted)
+                if (mounted) {
                   setState(() {
                     _data.removeWhere((currentItem) => item == currentItem);
                   });
+                }
               }),
           isExpanded: item.isExpanded,
         );

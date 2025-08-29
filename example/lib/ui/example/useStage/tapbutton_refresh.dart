@@ -83,7 +83,7 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
         header: ClassicHeader(),
         onRefresh: () async {
           await Future.delayed(const Duration(milliseconds: 2000));
-          if (mounted)
+          if (mounted) {
             setState(() {
               data.add("new");
               data.add("new");
@@ -92,6 +92,7 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
               data.add("new");
               data.add("new");
             });
+          }
           _refreshController.refreshCompleted();
         },
         child: data.length == 0

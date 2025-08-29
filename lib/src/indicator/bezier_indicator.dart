@@ -73,8 +73,9 @@ class _BezierHeaderState extends RefreshIndicatorState<BezierHeader>
     if (widget.onOffsetChange != null) {
       widget.onOffsetChange!(offset);
     }
-    if (!_beizerBounceCtl.isAnimating || (!floating))
+    if (!_beizerBounceCtl.isAnimating || (!floating)) {
       _beizerBounceCtl.value = math.max(0, offset - widget.rectHeight);
+    }
   }
 
   @override
@@ -367,8 +368,9 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
       },
       onModeChange: (m) {
         mode = m;
-        if (m == RefreshStatus.refreshing)
+        if (m == RefreshStatus.refreshing) {
           _radialCtrl.repeat(period: Duration(milliseconds: 500));
+        }
         setState(() {});
       },
       endRefresh: () async {

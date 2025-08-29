@@ -67,10 +67,11 @@ class _ListDemoState extends State<ReorderableListDemo> {
 
   void changeItemType(_ReorderableListType? type) {
     if (type == null) return;
-    if (mounted)
+    if (mounted) {
       setState(() {
         _itemType = type;
       });
+    }
     _bottomSheet.setState!(() {
       // Trigger a rebuild.
     });
@@ -79,10 +80,11 @@ class _ListDemoState extends State<ReorderableListDemo> {
 
   void changeReverse(bool? newValue) {
     if (newValue == null) return;
-    if (mounted)
+    if (mounted) {
       setState(() {
         _reverse = newValue;
       });
+    }
     _bottomSheet.setState!(() {
       // Trigger a rebuild.
     });
@@ -90,7 +92,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
   }
 
   void _showConfigurationSheet() {
-    if (mounted)
+    if (mounted) {
       setState(() {
         final currentState = scaffoldKey.currentState;
         if (currentState != null) {
@@ -144,6 +146,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
           });
         }
       });
+    }
   }
 
   Widget buildListTile(_ListItem item) {
@@ -158,10 +161,11 @@ class _ListDemoState extends State<ReorderableListDemo> {
           isThreeLine: true,
           value: item.checkState,
           onChanged: (bool? newValue) {
-            if (mounted)
+            if (mounted) {
               setState(() {
                 item.checkState = newValue ?? false;
               });
+            }
           },
           title: Text('This item represents ${item.value}.'),
           subtitle: secondary,
@@ -185,7 +189,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    if (mounted)
+    if (mounted) {
       setState(() {
         if (newIndex > oldIndex) {
           newIndex -= 1;
@@ -193,6 +197,7 @@ class _ListDemoState extends State<ReorderableListDemo> {
         final _ListItem item = _items.removeAt(oldIndex);
         _items.insert(newIndex, item);
       });
+    }
   }
 
   @override
@@ -206,13 +211,14 @@ class _ListDemoState extends State<ReorderableListDemo> {
             icon: const Icon(Icons.sort_by_alpha),
             tooltip: 'Sort',
             onPressed: () {
-              if (mounted)
+              if (mounted) {
                 setState(() {
                   _reverseSort = !_reverseSort;
                   _items.sort((_ListItem a, _ListItem b) => _reverseSort
                       ? b.value.compareTo(a.value)
                       : a.value.compareTo(b.value));
                 });
+              }
             },
           ),
           IconButton(

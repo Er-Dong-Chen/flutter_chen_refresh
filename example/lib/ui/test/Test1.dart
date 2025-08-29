@@ -91,15 +91,16 @@ class Test1State extends State<Test1> {
                       child: Text('Data '),
                     ),
                   ));
-                  if (mounted)
+                  if (mounted) {
                     setState(() {
                       _refreshController.refreshCompleted();
                     });
+                  }
                 });
               },
               onLoading: () {
                 Future.delayed(const Duration(milliseconds: 2009)).then((val) {
-                  if (mounted)
+                  if (mounted) {
                     setState(() {
                       data.add(Card(
                         margin: EdgeInsets.only(
@@ -110,6 +111,7 @@ class Test1State extends State<Test1> {
                       ));
                       _refreshController.loadComplete();
                     });
+                  }
                 });
               },
               child: ListView.builder(

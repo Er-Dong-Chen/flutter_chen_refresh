@@ -527,12 +527,12 @@ class SmartRefresherState extends State<SmartRefresher> {
     final RefreshConfiguration? configuration =
         RefreshConfiguration.of(context);
     Widget? body;
-    if (widget.builder != null)
+    if (widget.builder != null) {
       body = widget.builder!(
           context,
           _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
               as RefreshPhysics);
-    else {
+    } else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
       body = _buildBodyBySlivers(widget.child, slivers, configuration);
@@ -659,8 +659,9 @@ class RefreshController {
     if (indicatorElement == null || _refresherState == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
 
-    if (needMove && _refresherState!.mounted)
+    if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
+    }
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         // - 0.0001 is for NestedScrollView.
@@ -674,9 +675,10 @@ class RefreshController {
               headerMode!.value = RefreshStatus.refreshing;
             } else {
               headerMode!.setValueWithNoNotify(RefreshStatus.refreshing);
-              if (indicatorElement.state.mounted)
+              if (indicatorElement.state.mounted) {
                 (indicatorElement.state as RefreshIndicatorState)
                     .setState(() {});
+              }
             }
           }
         });
@@ -716,8 +718,9 @@ class RefreshController {
 
     if (indicatorElement == null || _refresherState == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove && _refresherState!.mounted)
+    if (needMove && _refresherState!.mounted) {
       _refresherState!.setCanDrag(false);
+    }
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
@@ -730,8 +733,9 @@ class RefreshController {
               footerMode!.value = LoadStatus.loading;
             } else {
               footerMode!.setValueWithNoNotify(LoadStatus.loading);
-              if (indicatorElement.state.mounted)
+              if (indicatorElement.state.mounted) {
                 (indicatorElement.state as LoadIndicatorState).setState(() {});
+              }
             }
           }
         });

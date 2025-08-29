@@ -44,21 +44,18 @@ class _NestedScrollExampleState extends State<NestedScrollExample> {
         builder: (context, physics) {
           return NestedScrollView(
             physics: physics,
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-               
-              
-            ],
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [],
             body: CustomScrollView(
               physics: physics,
               slivers: [
                 // 推荐用官方header，确保刷新逻辑
                 ClassicHeader(),
                 SliverAppBar(
-                expandedHeight: 200.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Text('Header'),
+                  expandedHeight: 200.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text('Header'),
+                  ),
                 ),
-              ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => ListTile(
