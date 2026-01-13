@@ -181,11 +181,13 @@ class Item1 extends StatefulWidget {
 class _ItemState extends State<Item1> {
   @override
   Widget build(BuildContext context) {
-    return FadeInImage(
-      placeholder: AssetImage("images/empty.png"),
-      image: NetworkImage(
-        widget.url,
-      ),
+    return Image.network(
+      widget.url,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(child: CupertinoActivityIndicator());
+      },
+      fit: BoxFit.cover,
     );
   }
 

@@ -42,7 +42,7 @@ What layout to return to in different states, how to set the progress of some an
 Let's take a simple indicator as an example, so that we can better understand how to design an indicator.
 Now, suppose we want to implement an indicator like this, as follows:
 
-![](arts/custom_header.gif)
+![](https://er-dong-chen.github.io/images/demo/refresh/custom_header.gif)
 
 When dragging, change the size of the picture as offset changes, and then after refreshing, call a moving picture to form the effect of running past.
 So, the question arises, how should we achieve such a function?

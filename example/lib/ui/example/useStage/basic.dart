@@ -533,8 +533,8 @@ class _SwiperAndListState extends State<SwiperAndList> {
               itemBuilder: (context, index) {
                 return Container(
                   height: 200,
-                  child: Image.asset(
-                    "images/empty.png",
+                  child: Image.network(
+                    "https://er-dong-chen.github.io/images/demo/refresh/empty.png",
                     fit: BoxFit.cover,
                   ),
                 );

@@ -37,8 +37,8 @@ class _TapButtonRefreshExampleState extends State<TapButtonRefreshExample> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Image.asset(
-          "images/empty1.png",
+        Image.network(
+          "https://er-dong-chen.github.io/images/demo/refresh/empty1.png",
           fit: BoxFit.cover,
         ),
         Text("没数据,请点击按钮刷新")

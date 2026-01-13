@@ -13,7 +13,7 @@
 一个提供上拉加载和下拉刷新的组件,同时支持Android和Ios<br>
 
 ### [Demo示例](https://er-dong-chen.github.io/flutter_chen_refresh/)
-### [最佳搭配](https://github.com/Er-Dong-Chen/flutter-common/blob/master/docs/refresh.md)
+### [最佳搭配](https://github.com/Er-Dong-Chen/flutter-common/blob/master/doc/refresh.md)
 
 ## 特性
 * 提供上拉加载和下拉刷新
@@ -220,31 +220,31 @@ NestedScrollView
 ### 例子
 |Style| [基础用法](example/lib/ui/example/useStage/basic.dart) | [header放在其他位置](example/lib/ui/example/customindicator/link_header_example.dart) | [水平+翻转刷新](example/lib/ui/example/useStage/horizontal+reverse.dart) |
 |:---:|:---:|:---:|:---:|
-|| ![](arts/example1.gif) | ![](arts/example2.gif) |![](arts/example3.gif) |
+|| ![](https://er-dong-chen.github.io/images/demo/refresh/example1.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/example2.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/example3.gif) |
 
 |Style|  [二楼刷新](example/lib/ui/example/useStage/twolevel_refresh.dart) |[兼容其他特殊组件](example/lib/ui/example/otherwidget) |  [聊天列表](example/lib/ui/example/useStage/qq_chat_list.dart) |
 |:---:|:---:|:---:|:---:|
-||  ![](arts/example4.gif) |![](arts/example5.gif) | ![](arts/example6.gif) |
+||  ![](https://er-dong-chen.github.io/images/demo/refresh/example4.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/example5.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/example6.gif) |
 
 
 |Style| [简单自定义刷新指示器(使用SpinKit)](example/lib/ui/example/customindicator/spinkit_header.dart)| [dragableScrollSheet+LoadMore](example/lib/ui/example/otherwidget/draggable_bottomsheet_loadmore.dart)|[Gif Indicator](example/lib/ui/example/customindicator/gif_indicator_example1.dart) |
 |:---:|:---:|:---:|:---:|
-|| ![](arts/example7.gif) | ![](arts/example8.gif) | ![](arts/gifindicator.gif) |
+|| ![](https://er-dong-chen.github.io/images/demo/refresh/example7.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/example8.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/gifindicator.gif) |
 
 ### 各种指示器
 
 | 下拉刷新风格 |   |上拉加载风格| |
 |:---:|:---:|:---:|:---:|
-| RefreshStyle.Follow <br> ![跟随](example/images/refreshstyle1.gif) |RefreshStyle.UnFollow <br>  ![不跟随](example/images/refreshstyle2.gif)| LoadStyle.ShowAlways <br> ![永远显示](example/images/loadstyle1.gif) | LoadStyle.HideAlways<br>  ![永远隐藏](example/images/loadstyle2.gif)|
-| RefreshStyle.Behind <br> ![背部](example/images/refreshstyle3.gif)| RefreshStyle.Front <br> ![前面悬浮](example/images/refreshstyle4.gif)| LoadStyle.ShowWhenLoading<br> ![当加载中才显示,其它隐藏](example/images/loadstyle3.gif) | |
+| RefreshStyle.Follow <br> ![跟随](https://er-dong-chen.github.io/images/demo/refresh/refreshstyle1.gif) |RefreshStyle.UnFollow <br>  ![不跟随](https://er-dong-chen.github.io/images/demo/refresh/refreshstyle2.gif)| LoadStyle.ShowAlways <br> ![永远显示](https://er-dong-chen.github.io/images/demo/refresh/loadstyle1.gif) | LoadStyle.HideAlways<br>  ![永远隐藏](https://er-dong-chen.github.io/images/demo/refresh/loadstyle2.gif)|
+| RefreshStyle.Behind <br> ![背部](https://er-dong-chen.github.io/images/demo/refresh/refreshstyle3.gif)| RefreshStyle.Front <br> ![前面悬浮](https://er-dong-chen.github.io/images/demo/refresh/refreshstyle4.gif)| LoadStyle.ShowWhenLoading<br> ![当加载中才显示,其它隐藏](https://er-dong-chen.github.io/images/demo/refresh/loadstyle3.gif) | |
 
 |Style| [ClassicIndicator](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/classic_indicator.dart) | [WaterDropHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/waterdrop_header.dart) | [MaterialClassicHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/material_indicator.dart) |
 |:---:|:---:|:---:|:---:|
-|| ![](example/images/classical_follow.gif) | ![](example/images/warterdrop.gif) | ![](example/images/material_classic.gif) |
+|| ![](https://er-dong-chen.github.io/images/demo/refresh/classical_follow.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/warterdrop.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/material_classic.gif) |
 
 |Style|  [WaterDropMaterialHeader](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/material_indicator.dart) | [Bezier+circle](example/lib/ui/example/customindicator/shimmer_indicator.dart) |[Bezier+Circle](https://github.com/Er-Dong-Chen/flutter_chen_refresh/blob/master/lib/src/indicator/bezier_indicator.dart) |
 |:---:|:---:|:---:|:---:|
-||  ![](example/images/material_waterdrop.gif) |![](example/images/shimmerindicator.gif) | ![](example/images/bezier.gif) |
+||  ![](https://er-dong-chen.github.io/images/demo/refresh/material_waterdrop.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/shimmerindicator.gif) | ![](https://er-dong-chen.github.io/images/demo/refresh/bezier.gif) |
 
 <a name="child"></a>
 

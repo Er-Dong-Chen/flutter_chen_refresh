@@ -79,9 +79,9 @@ class _TwoLevelExampleState extends State<TwoLevelExample> {
                       displayAlignment: TwoLevelDisplayAlignment.fromTop,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage("images/secondfloor.jpg"),
+                            image: NetworkImage(
+                                "https://er-dong-chen.github.io/images/demo/refresh/secondfloor.jpg"),
                             fit: BoxFit.cover,
-                            // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果
                             alignment: Alignment.topCenter),
                       ),
                       twoLevelWidget: TwoLevelWidget(),
@@ -193,8 +193,8 @@ class TwoLevelWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-            image: AssetImage("images/secondfloor.jpg"),
-            // 很重要的属性,这会影响你打开二楼和关闭二楼的动画效果,关联到TwoLevelHeader,如果背景一致的情况,请设置相同
+            image: NetworkImage(
+                "https://er-dong-chen.github.io/images/demo/refresh/secondfloor.jpg"),
             alignment: Alignment.topCenter,
             fit: BoxFit.cover),
       ),

@@ -62,7 +62,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/classical_follow.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/classical_follow.gif"),
       IndicatorItem(
           title: "经典指示器(不跟随)",
           onClick: () {
@@ -77,7 +78,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/classical_unfollow.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/classical_unfollow.gif"),
       IndicatorItem(
           title: "QQ头部指示器",
           onClick: () {
@@ -92,7 +94,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/warterdrop.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/warterdrop.gif"),
       IndicatorItem(
           title: "经典Material指示器",
           onClick: () {
@@ -108,7 +111,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/material_classic.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/material_classic.gif"),
       IndicatorItem(
           title: "bezier+circle",
           onClick: () {
@@ -125,7 +129,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/bezier.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/bezier.gif"),
       IndicatorItem(
           title: "水滴坠落Material指示器",
           onClick: () {
@@ -140,7 +145,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/material_waterdrop.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/material_waterdrop.gif"),
       IndicatorItem(
           title: "底部指示器(经常显示)",
           onClick: () {
@@ -154,7 +160,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       ),
                     )));
           },
-          imgRes: "images/loadstyle1.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/loadstyle1.gif"),
       IndicatorItem(
           title: "底部指示器(经常隐藏)",
           onClick: () {
@@ -175,7 +182,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       maxUnderScrollExtent: 100.0,
                     )));
           },
-          imgRes: "images/loadstyle2.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/loadstyle2.gif"),
       IndicatorItem(
           title: "底部指示器(只有加载中才显示)",
           onClick: () {
@@ -201,7 +209,8 @@ class _IndicatorPageState extends State<IndicatorPage> {
                       footerTriggerDistance: -60.0,
                     )));
           },
-          imgRes: "images/loadstyle3.gif"),
+          imgRes:
+              "https://er-dong-chen.github.io/images/demo/refresh/loadstyle3.gif"),
     ];
     super.didChangeDependencies();
   }
@@ -234,7 +243,7 @@ class _IndicatorItemState extends State<IndicatorItem> {
         child: Column(
           children: <Widget>[
             Center(
-              child: Image.asset(
+              child: Image.network(
                 widget.imgRes,
                 fit: BoxFit.cover,
                 width: 180.0,

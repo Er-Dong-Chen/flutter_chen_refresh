@@ -68,8 +68,10 @@ class RunningHeaderState extends RefreshIndicatorState<RunningHeader>
     return SlideTransition(
       child: ScaleTransition(
         child: (mode != RefreshStatus.idle && mode != RefreshStatus.canRefresh)
-            ? Image.asset("images/custom_2.gif")
-            : Image.asset("images/custom_1.jpg"),
+            ? Image.network(
+                "https://er-dong-chen.github.io/images/demo/refresh/custom_2.gif")
+            : Image.network(
+                "https://er-dong-chen.github.io/images/demo/refresh/custom_1.jpg"),
         scale: _scaleAnimation,
       ),
       position: offsetTween.animate(_offsetController),

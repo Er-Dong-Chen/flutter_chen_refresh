@@ -37,8 +37,8 @@ class _RefreshWithEmptyViewState extends State<RefreshWithEmptyView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Image.asset(
-          "images/empty1.png",
+        Image.network(
+          "https://er-dong-chen.github.io/images/demo/refresh/empty1.png",
           fit: BoxFit.cover,
         ),
         Text("没数据,请下拉刷新")

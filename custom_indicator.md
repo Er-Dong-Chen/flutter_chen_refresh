@@ -46,7 +46,7 @@
 
 下面直接以实现一个简单的指示器为例子,这样才能更好的明白怎么设计一个指示器。
 现在,猜想我们要实现一个这样的指示器,如下图:
-![](arts/custom_header.gif)
+![](https://er-dong-chen.github.io/images/demo/refresh/custom_header.gif)
 
 拖动时,随着offset的变化而变化图片大小,然后刷新完毕后,调用一个平移动画形成跑过去的效果。
 那么,问题来了,我们应该要怎么去实现这样的功能呢?
