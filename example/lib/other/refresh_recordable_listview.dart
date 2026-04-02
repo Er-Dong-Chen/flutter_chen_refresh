@@ -270,7 +270,6 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
         dropAreaWithoutMargin = _draggingFeedbackSize!.width;
         break;
       case Axis.vertical:
-      default:
         dropAreaWithoutMargin = _draggingFeedbackSize!.height;
         break;
     }
@@ -290,7 +289,7 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
   @override
   void didChangeDependencies() {
     _scrollController =
-        PrimaryScrollController.of(context) ?? ScrollController();
+        PrimaryScrollController.maybeOf(context) ?? ScrollController();
     super.didChangeDependencies();
   }
 
@@ -371,7 +370,6 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       case Axis.horizontal:
         return Row(children: children);
       case Axis.vertical:
-      default:
         return Column(children: children);
     }
   }
@@ -428,8 +426,8 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
       // before index+2, which is after the space at index+1.
       void moveAfter() => reorder(index, index + 2);
 
-      final MaterialLocalizations localizations =
-          MaterialLocalizations.of(context);
+      final WidgetsLocalizations localizations =
+          WidgetsLocalizations.of(context);
 
       // If the item can move to before its current position in the list.
       if (index > 0) {
@@ -597,7 +595,6 @@ class _ReorderableListContentState extends State<_ReorderableListContent>
           );
           break;
         case Axis.vertical:
-        default:
           finalDropArea = SizedBox(
             key: endWidgetKey,
             height: _defaultDropAreaExtent,

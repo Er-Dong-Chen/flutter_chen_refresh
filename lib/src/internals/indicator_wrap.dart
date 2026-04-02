@@ -133,6 +133,8 @@ abstract class LoadIndicator extends StatefulWidget {
 abstract class RefreshIndicatorState<T extends RefreshIndicator>
     extends State<T>
     with IndicatorStateMixin<T, RefreshStatus>, RefreshProcessor {
+  bool _hasDraggedAfterTwoLevelOpened = false;
+
   bool _inVisual() {
     return _position!.pixels < 0.0;
   }
@@ -159,8 +161,13 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
   // handle the  state change between canRefresh and idle canRefresh  before refreshing
   void _dispatchModeByOffset(double offset) {
     if (mode == RefreshStatus.twoLeveling) {
-      if (_position!.pixels > configuration!.closeTwoLevelDistance &&
-          activity is BallisticScrollActivity) {
+      if (activity is DragScrollActivity && _position!.pixels > 0.0) {
+        _hasDraggedAfterTwoLevelOpened = true;
+      }
+      if (_hasDraggedAfterTwoLevelOpened &&
+          _position!.pixels > configuration!.closeTwoLevelDistance &&
+          activity is BallisticScrollActivity &&
+          activity!.velocity > 0.0) {
         refresher!.controller.twoLevelComplete();
         return;
       }
@@ -236,6 +243,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
     }
     update();
     if (mode == RefreshStatus.idle || mode == RefreshStatus.canRefresh) {
+      _hasDraggedAfterTwoLevelOpened = false;
       floating = false;
 
       resetValue();
@@ -285,6 +293,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       }
       if (refresher!.onRefresh != null) refresher!.onRefresh!();
     } else if (mode == RefreshStatus.twoLevelOpening) {
+      _hasDraggedAfterTwoLevelOpened = false;
       floating = true;
       refresherState!.setCanDrag(false);
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -300,6 +309,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(true);
       });
     } else if (mode == RefreshStatus.twoLevelClosing) {
+      _hasDraggedAfterTwoLevelOpened = false;
       floating = false;
       refresherState!.setCanDrag(false);
       update();
@@ -640,11 +650,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    if (V == RefreshStatus) {
-      SmartRefresher.of(context)?.controller.headerMode?.value =
-          RefreshStatus.idle;
-    }
     super.initState();
   }
 

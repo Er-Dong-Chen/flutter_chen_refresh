@@ -43,8 +43,8 @@ class _ListItem {
 class _ListDemoState extends State<ReorderableListDemo> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
-  late PersistentBottomSheetController _bottomSheet;
-  RefreshController _refreshController = RefreshController();
+  PersistentBottomSheetController? _bottomSheet;
+  final RefreshController _refreshController = RefreshController();
   _ReorderableListType _itemType = _ReorderableListType.threeLine;
   bool _reverse = false;
   bool _reverseSort = false;
@@ -72,10 +72,10 @@ class _ListDemoState extends State<ReorderableListDemo> {
         _itemType = type;
       });
     }
-    _bottomSheet.setState!(() {
+    _bottomSheet?.setState?.call(() {
       // Trigger a rebuild.
     });
-    _bottomSheet.close();
+    _bottomSheet?.close();
   }
 
   void changeReverse(bool? newValue) {
@@ -85,10 +85,10 @@ class _ListDemoState extends State<ReorderableListDemo> {
         _reverse = newValue;
       });
     }
-    _bottomSheet.setState!(() {
+    _bottomSheet?.setState?.call(() {
       // Trigger a rebuild.
     });
-    _bottomSheet.close();
+    _bottomSheet?.close();
   }
 
   void _showConfigurationSheet() {
@@ -112,35 +112,37 @@ class _ListDemoState extends State<ReorderableListDemo> {
                     value: _reverse,
                     onChanged: changeReverse,
                   ),
-                  RadioListTile<_ReorderableListType>(
-                    dense: true,
-                    title: const Text('Horizontal Avatars'),
-                    value: _ReorderableListType.horizontalAvatar,
+                  RadioGroup<_ReorderableListType>(
                     groupValue: _itemType,
                     onChanged: changeItemType,
-                  ),
-                  RadioListTile<_ReorderableListType>(
-                    dense: true,
-                    title: const Text('Vertical Avatars'),
-                    value: _ReorderableListType.verticalAvatar,
-                    groupValue: _itemType,
-                    onChanged: changeItemType,
-                  ),
-                  RadioListTile<_ReorderableListType>(
-                    dense: true,
-                    title: const Text('Three-line'),
-                    value: _ReorderableListType.threeLine,
-                    groupValue: _itemType,
-                    onChanged: changeItemType,
+                    child: Column(
+                      children: <Widget>[
+                        RadioListTile<_ReorderableListType>(
+                          dense: true,
+                          title: const Text('Horizontal Avatars'),
+                          value: _ReorderableListType.horizontalAvatar,
+                        ),
+                        RadioListTile<_ReorderableListType>(
+                          dense: true,
+                          title: const Text('Vertical Avatars'),
+                          value: _ReorderableListType.verticalAvatar,
+                        ),
+                        RadioListTile<_ReorderableListType>(
+                          dense: true,
+                          title: const Text('Three-line'),
+                          value: _ReorderableListType.threeLine,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             );
           });
-          _bottomSheet.closed.whenComplete(() {
+          _bottomSheet?.closed.whenComplete(() {
             if (mounted) {
               setState(() {
-                // 不能直接赋null，late变量不允许
+                _bottomSheet = null;
               });
             }
           });

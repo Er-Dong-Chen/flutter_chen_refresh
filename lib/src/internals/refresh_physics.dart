@@ -245,16 +245,17 @@ class RefreshPhysics extends ScrollPhysics {
       return value - bottomBoundary;
     }
 
-    // check user is dragging,it is import,some devices may not bounce with different frame and time,bouncing return the different velocity
-    if (scrollPosition.activity is DragScrollActivity) {
-      if (maxOverScrollExtent != double.infinity &&
-          value < position.pixels &&
-          position.pixels <= topBoundary) // underscroll
-        return value - position.pixels;
-      if (maxUnderScrollExtent != double.infinity &&
-          bottomBoundary <= position.pixels &&
-          position.pixels < value) // overscroll
-        return value - position.pixels;
+    // Once the scroll position has reached the configured overscroll limit,
+    // do not allow ballistic or drag activities to push it even further out.
+    if (maxOverScrollExtent != double.infinity &&
+        value < position.pixels &&
+        position.pixels <= topBoundary) {
+      return value - position.pixels;
+    }
+    if (maxUnderScrollExtent != double.infinity &&
+        bottomBoundary <= position.pixels &&
+        position.pixels < value) {
+      return value - position.pixels;
     }
     return 0.0;
   }
@@ -296,7 +297,7 @@ class RefreshPhysics extends ScrollPhysics {
             controller!.headerMode!.value == RefreshStatus.twoLeveling
                 ? 0.0
                 : position.maxScrollExtent,
-        tolerance: tolerance,
+        tolerance: toleranceFor(position),
       );
     }
     return super.createBallisticSimulation(position, velocity);

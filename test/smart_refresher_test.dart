@@ -245,7 +245,7 @@ void main() {
     ));
 
     // test pull down
-    await tester.drag(find.byType(Viewport), const Offset(0, 120));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 120));
     await tester.pump();
     expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
     await tester.pumpAndSettle();
@@ -254,7 +254,7 @@ void main() {
     await tester.pumpAndSettle(Duration(milliseconds: 800));
 
     // test flip up
-    await tester.fling(find.byType(Viewport), const Offset(0, -1000), 3000);
+    await tester.fling(find.byType(Scrollable), const Offset(0, -1000), 3000);
     await tester.pumpAndSettle();
     expect(_refreshController.footerStatus, LoadStatus.loading);
     _refreshController.footerMode!.value = LoadStatus.idle;
@@ -262,7 +262,7 @@ void main() {
     // test drag up
     _refreshController.position!
         .jumpTo(_refreshController.position!.maxScrollExtent);
-    await tester.drag(find.byType(Viewport), const Offset(0, -100));
+    await tester.drag(find.byType(Scrollable), const Offset(0, -100));
     await tester.pumpAndSettle();
     expect(_refreshController.position!.extentAfter, 0.0);
     _refreshController.loadComplete();
@@ -302,7 +302,7 @@ void main() {
     ));
 
     // test pull down
-    await tester.drag(find.byType(Viewport), const Offset(0, 120));
+    await tester.drag(find.byType(Scrollable), const Offset(0, 120));
     await tester.pump();
     expect(_refreshController.headerStatus, RefreshStatus.canRefresh);
     await tester.pump(Duration(milliseconds: 2));

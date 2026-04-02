@@ -50,21 +50,6 @@ class _AnimatedListExampleState extends State<AnimatedListExample> {
     );
   }
 
-  // Used to build an item after it has been removed from the list. This method is
-  // needed because a removed item remains  visible until its animation has
-  // completed (even though it's gone as far this ListModel is concerned).
-  // The widget will be used by the [SliverAnimatedListState.removeItem] method's
-  // [SliverAnimatedListRemovedItemBuilder] parameter.
-  Widget _buildRemovedItem(
-      int item, BuildContext context, Animation<double> animation) {
-    return new CardItem(
-      animation: animation,
-      item: item,
-      selected: false,
-      // No gesture detector here: we don't want removed items to be interactive.
-    );
-  }
-
   // Insert the "next item" into the list model.
   void _insert() {
     for (int i = 0; i < 5; i++) {

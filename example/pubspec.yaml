@@ -24,7 +24,7 @@ dependencies:
 
   shimmer: ^3.0.0
 
-  flutter_sticky_header: ^0.7.0
+  flutter_sticky_header: ^0.8.0
 
   card_swiper: ^3.0.0
 

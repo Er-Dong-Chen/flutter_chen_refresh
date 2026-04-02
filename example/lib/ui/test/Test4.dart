@@ -192,10 +192,6 @@ class Test4State extends State<Test4> with TickerProviderStateMixin {
       hideFooterWhenNotFull: false,
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => false;
 }
 
 class CirclePainter extends CustomClipper<Path> {

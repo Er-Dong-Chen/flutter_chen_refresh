@@ -7,7 +7,6 @@
 import 'dart:async';
 import 'dart:convert' show json;
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import '../../Item.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:flutter_chen_refresh/flutter_chen_refresh.dart';
@@ -163,10 +162,6 @@ class _HorizontalRefreshState extends State<HorizontalRefresh>
       ],
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => false;
 }
 
 class Item1 extends StatefulWidget {

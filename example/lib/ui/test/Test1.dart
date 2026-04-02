@@ -40,8 +40,6 @@ class Test1State extends State<Test1> {
     _refreshController.requestRefresh();
   }
 
-  void _onOffsetCallback(bool isUp, double offset) {}
-
   @override
   void initState() {
     // TODO: implement initState

@@ -34,7 +34,7 @@ void main() {
           controller: _refreshController,
         ),
       ));
-      await tester.fling(find.byType(Viewport), const Offset(0, 100), 5200);
+      await tester.fling(find.byType(Scrollable), const Offset(0, 100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
             _refreshController.position!.pixels, greaterThanOrEqualTo(-250.0));
@@ -44,14 +44,14 @@ void main() {
       // from bottom flip up
       _refreshController.position!
           .jumpTo(_refreshController.position!.maxScrollExtent);
-      await tester.fling(find.byType(Viewport), const Offset(0, 1000), 5200);
+      await tester.fling(find.byType(Scrollable), const Offset(0, 1000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
             _refreshController.position!.pixels, greaterThanOrEqualTo(-250.0));
         await tester.pump(const Duration(milliseconds: 20));
       }
 
-      await tester.fling(find.byType(Viewport), const Offset(0, -100), 5200);
+      await tester.fling(find.byType(Scrollable), const Offset(0, -100), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
             _refreshController.position!.pixels -
@@ -63,7 +63,8 @@ void main() {
       // from bottom flip up
       _refreshController.position!
           .jumpTo(_refreshController.position!.maxScrollExtent);
-      await tester.fling(find.byType(Viewport), const Offset(0, -43000), 5200);
+      await tester.fling(
+          find.byType(Scrollable), const Offset(0, -43000), 5200);
       while (tester.binding.transientCallbackCount > 0) {
         expect(
             _refreshController.position!.pixels -
@@ -122,7 +123,7 @@ void main() {
         ),
       ));
 
-      await tester.fling(find.byType(Viewport), Offset(0, 100.0), 1000);
+      await tester.fling(find.byType(Scrollable), Offset(0, 100.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
         expect(_refreshController.position!.pixels, 0.0);
         await tester.pump(const Duration(milliseconds: 20));
@@ -131,7 +132,7 @@ void main() {
 
       // just little middle
       _refreshController.position!.jumpTo(200.0);
-      await tester.fling(find.byType(Viewport), Offset(0, 100.0), 1000);
+      await tester.fling(find.byType(Scrollable), Offset(0, 100.0), 1000);
       while (tester.binding.transientCallbackCount > 0) {
         expect(_refreshController.position!.pixels, greaterThanOrEqualTo(0.0));
         await tester.pump(const Duration(milliseconds: 20));
@@ -140,7 +141,7 @@ void main() {
       // the most doubt stiuation,from bottomest fliping to top
       _refreshController.position!
           .jumpTo(_refreshController.position!.maxScrollExtent);
-      await tester.fling(find.byType(Viewport), Offset(0, 1000.0), 5000);
+      await tester.fling(find.byType(Scrollable), Offset(0, 1000.0), 5000);
       while (tester.binding.transientCallbackCount > 0) {
         expect(_refreshController.position!.pixels, greaterThanOrEqualTo(0.0));
         await tester.pump(const Duration(milliseconds: 20));
@@ -173,7 +174,7 @@ void main() {
       ),
     ));
 
-    await tester.drag(find.byType(Viewport), Offset(0, 300.0));
+    await tester.drag(find.byType(Scrollable), Offset(0, 300.0));
     while (tester.binding.transientCallbackCount > 0) {
       expect(_refreshController.position!.pixels, greaterThanOrEqualTo(-300));
       await tester.pump(const Duration(milliseconds: 20));
@@ -182,7 +183,7 @@ void main() {
 
     _refreshController.position!
         .jumpTo(_refreshController.position!.maxScrollExtent);
-    await tester.fling(find.byType(Viewport), Offset(0, -1000.0), 5000);
+    await tester.fling(find.byType(Scrollable), Offset(0, -1000.0), 5000);
     while (tester.binding.transientCallbackCount > 0) {
       expect(
           _refreshController.position!.pixels -

@@ -1,3 +1,6 @@
+## 3.1.0
+* Reduce the package volume
+
 ## 3.0.3
 * Fix dart code
 

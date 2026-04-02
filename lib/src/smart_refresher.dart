@@ -697,10 +697,23 @@ class RefreshController {
       Curve curve = Curves.linear}) {
     assert(position != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
+    if (isTwoLevel) return Future.value();
+    final StatefulElement? indicatorElement =
+        _findIndicator(position!.context.storageContext, RefreshIndicator);
+
+    if (indicatorElement != null) {
+      (indicatorElement.state as RefreshIndicatorState).floating = true;
+    }
+    if (_refresherState?.mounted == true) {
+      _refresherState!.setCanDrag(false);
+    }
     headerMode!.value = RefreshStatus.twoLevelOpening;
     return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
       await position?.animateTo(position!.minScrollExtent,
           duration: duration, curve: curve);
+      if (headerMode?.value != RefreshStatus.twoLevelClosing) {
+        headerMode!.value = RefreshStatus.twoLeveling;
+      }
     });
   }
 
@@ -814,6 +827,7 @@ class RefreshController {
 
   /// for some special situation, you should call dispose() for safe,it may throw errors after parent widget dispose
   void dispose() {
+    _detachPosition();
     headerMode!.dispose();
     footerMode!.dispose();
     headerMode = null;
