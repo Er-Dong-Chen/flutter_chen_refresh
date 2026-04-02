@@ -1,3 +1,6 @@
+## 3.2.0
+* fix and improve
+
 ## 3.1.0
 * Reduce the package volume
 
