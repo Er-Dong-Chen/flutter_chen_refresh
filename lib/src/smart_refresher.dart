@@ -15,16 +15,17 @@ import 'package:flutter_chen_refresh/src/internals/slivers.dart';
 // ignore_for_file: DEPRECATED_MEMBER_USE
 
 /// when viewport not full one page, for different state,whether it should follow the content
-typedef void OnTwoLevel(bool isOpen);
+typedef OnTwoLevel = void Function(bool isOpen);
 
 /// when viewport not full one page, for different state,whether it should follow the content
-typedef bool ShouldFollowContent(LoadStatus? status);
+typedef ShouldFollowContent = bool Function(LoadStatus? status);
 
 /// global default indicator builder
 typedef IndicatorBuilder = Widget Function();
 
 /// a builder for attaching refresh function with the physics
-typedef Widget RefresherBuilder(BuildContext context, RefreshPhysics physics);
+typedef RefresherBuilder = Widget Function(
+    BuildContext context, RefreshPhysics physics);
 
 /// header state
 enum RefreshStatus {
@@ -431,7 +432,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
         reverse: reverse ?? false,
       );
-    } else
+    } else {
       body = Scrollable(
         physics: _getScrollPhysics(
             conf, childView.physics ?? AlwaysScrollableScrollPhysics()),
@@ -460,6 +461,7 @@ class SmartRefresherState extends State<SmartRefresher> {
           return viewport;
         },
       );
+    }
 
     return body;
   }

@@ -10,12 +10,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_chen_refresh/flutter_chen_refresh.dart';
 import 'package:flutter_chen_refresh/src/internals/slivers.dart';
 
-import 'dataSource.dart';
+import 'data_source.dart';
 import 'test_indicator.dart';
 
-Future<void>? buildNotFullList(tester, bool reverse, Axis direction,
-    {dynamic footer = const TestFooter(),
-    dynamic header = const TestHeader(),
+Future<void> buildNotFullList(WidgetTester tester, bool reverse, Axis direction,
+    {Widget footer = const TestFooter(),
+    Widget header = const TestHeader(),
     bool initload = false}) {
   final RefreshController _refreshController = RefreshController(
       initialLoadStatus: initload ? LoadStatus.loading : LoadStatus.idle);

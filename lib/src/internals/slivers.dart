@@ -149,8 +149,8 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     }
   }
 
-  set updateFlag(u) {
-    _updateFlag = u;
+  set updateFlag(bool value) {
+    _updateFlag = value;
     markNeedsLayout();
   }
 
@@ -210,11 +210,12 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             maxExtent: Math.max(0, overscrolledExtent + layoutExtent)),
         parentUsesSize: true,
       );
-    } else
+    } else {
       child!.layout(
         constraints.asBoxConstraints(),
         parentUsesSize: true,
       );
+    }
     final double boxExtent = (constraints.axisDirection == AxisDirection.up ||
             constraints.axisDirection == AxisDirection.down)
         ? child!.size.height
@@ -374,7 +375,7 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
 
   double? _layoutExtent;
 
-  set layoutExtent(extent) {
+  set layoutExtent(double? extent) {
     if (extent == _layoutExtent) return;
     _layoutExtent = extent;
     markNeedsLayout();

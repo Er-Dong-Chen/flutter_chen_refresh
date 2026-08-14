@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_chen_refresh/flutter_chen_refresh.dart';
 
-import 'dataSource.dart';
+import 'data_source.dart';
 import 'test_indicator.dart';
 
 void main() {

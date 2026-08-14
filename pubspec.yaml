@@ -1,6 +1,6 @@
 name: flutter_chen_refresh
 description: A powerful Flutter refresh library with customizable indicators and smooth animations.
-version: 3.5.0
+version: 4.0.0
 homepage: https://github.com/Er-Dong-Chen/flutter_chen_refresh
 
 topics:
@@ -16,6 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ">=2.1.1 <7.0.0"
 
 flutter:
   uses-material-design: true

@@ -15,9 +15,9 @@ import 'slivers.dart';
 
 typedef VoidFutureCallBack = Future<void> Function();
 
-typedef void OffsetCallBack(double offset);
+typedef OffsetCallBack = void Function(double offset);
 
-typedef void ModeChangeCallBack<T>(T? mode);
+typedef ModeChangeCallBack<T> = void Function(T? mode);
 
 /// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
@@ -517,9 +517,11 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
       if (_checkIfCanLoading()) {
         if (activity is IdleScrollActivity) {
-          if ((configuration!.enableBallisticLoad) ||
-              ((!configuration!.enableBallisticLoad) &&
-                  mode == LoadStatus.canLoading)) enterLoading();
+          if (configuration!.enableBallisticLoad ||
+              (!configuration!.enableBallisticLoad &&
+                  mode == LoadStatus.canLoading)) {
+            enterLoading();
+          }
         }
       }
     } else {
@@ -593,9 +595,9 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   bool _floating = false;
 
-  set floating(floating) => _floating = floating;
+  set floating(bool value) => _floating = value;
 
-  get floating => _floating;
+  bool get floating => _floating;
 
   set mode(V? value) {
     if (value != null) {
