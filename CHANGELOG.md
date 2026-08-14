@@ -1,3 +1,8 @@
+## 3.3.0
+* Improve null safety for refresh controllers and indicator states.
+* Fix refresh physics and two-level scrolling behavior.
+* Improve sliver state synchronization and controller disposal safety.
+
 ## 3.2.0
 * fix and improve
 

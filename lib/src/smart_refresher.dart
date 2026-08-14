@@ -484,10 +484,14 @@ class SmartRefresherState extends State<SmartRefresher> {
   void didUpdateWidget(SmartRefresher oldWidget) {
     // TODO: implement didUpdateWidget
     if (widget.controller != oldWidget.controller) {
-      widget.controller.headerMode!.value =
-          oldWidget.controller.headerMode!.value;
-      widget.controller.footerMode!.value =
-          oldWidget.controller.footerMode!.value;
+      final oldHeaderStatus = oldWidget.controller.headerStatus;
+      final oldFooterStatus = oldWidget.controller.footerStatus;
+      if (oldHeaderStatus != null) {
+        widget.controller.headerMode?.value = oldHeaderStatus;
+      }
+      if (oldFooterStatus != null) {
+        widget.controller.footerMode?.value = oldFooterStatus;
+      }
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -827,9 +831,10 @@ class RefreshController {
 
   /// for some special situation, you should call dispose() for safe,it may throw errors after parent widget dispose
   void dispose() {
+    if (headerMode == null && footerMode == null) return;
     _detachPosition();
-    headerMode!.dispose();
-    footerMode!.dispose();
+    headerMode?.dispose();
+    footerMode?.dispose();
     headerMode = null;
     footerMode = null;
   }
