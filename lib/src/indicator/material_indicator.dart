@@ -75,7 +75,7 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted && _position!.pixels <= 0) setState(() {});
+      if (mounted && (_position?.pixels ?? 1.0) <= 0.0) setState(() {});
     });
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -228,6 +228,7 @@ class _WaterDropMaterialHeaderState extends _MaterialClassicHeaderState {
         upperBound: 1.5,
         lowerBound: 0.0,
         value: 0.0);
+    _positionController.dispose();
     _positionController = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: 300),

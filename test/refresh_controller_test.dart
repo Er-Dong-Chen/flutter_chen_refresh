@@ -115,6 +115,37 @@ void testRequestFun(bool full) {
 }
 
 void main() {
+  test('RefreshConfiguration notifies for all behavioral changes', () {
+    const child = SizedBox();
+    final original = RefreshConfiguration(child: child);
+
+    expect(
+      RefreshConfiguration(
+        child: child,
+        enableBallisticLoad: false,
+      ).updateShouldNotify(original),
+      isTrue,
+    );
+    expect(
+      RefreshConfiguration(
+        child: child,
+        enableLoadingWhenNoData: true,
+      ).updateShouldNotify(original),
+      isTrue,
+    );
+    expect(
+      RefreshConfiguration(
+        child: child,
+        springDescription: const SpringDescription(
+          mass: 1,
+          stiffness: 100,
+          damping: 10,
+        ),
+      ).updateShouldNotify(original),
+      isTrue,
+    );
+  });
+
   test("check RefreshController inital param ", () async {
     final RefreshController _refreshController = RefreshController(
         initialRefreshStatus: RefreshStatus.idle,

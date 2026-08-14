@@ -12,6 +12,99 @@ import 'dataSource.dart';
 import 'test_indicator.dart';
 
 void main() {
+  testWidgets('rebinds when the refresh controller changes', (tester) async {
+    final firstController = RefreshController();
+    final secondController = RefreshController();
+    late StateSetter setHostState;
+    bool useSecondController = false;
+    int refreshCount = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StatefulBuilder(
+          builder: (context, setState) {
+            setHostState = setState;
+            return SmartRefresher(
+              controller:
+                  useSecondController ? secondController : firstController,
+              header: TestHeader(),
+              onRefresh: () => refreshCount++,
+              child: ListView.builder(
+                itemCount: 20,
+                itemExtent: 50,
+                itemBuilder: (context, index) => Text('$index'),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    expect(firstController.position, isNotNull);
+    setHostState(() => useSecondController = true);
+    await tester.pump();
+
+    expect(secondController.position, isNotNull);
+    await firstController.requestRefresh(needMove: false);
+    expect(firstController.headerStatus, RefreshStatus.idle);
+    await secondController.requestRefresh(needMove: false);
+    expect(secondController.headerStatus, RefreshStatus.refreshing);
+    expect(refreshCount, 1);
+  });
+
+  testWidgets('preserves shrinkWrap when adapting a ScrollView',
+      (tester) async {
+    final controller = RefreshController();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SmartRefresher(
+              controller: controller,
+              enablePullUp: true,
+              footer: TestFooter(),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 1,
+                itemExtent: 40,
+                itemBuilder: (context, index) => Text('$index'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final scrollView =
+        tester.widget<CustomScrollView>(find.byType(CustomScrollView));
+    expect(scrollView.shrinkWrap, isTrue);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('link indicators tolerate an unmounted target', (tester) async {
+    final controller = RefreshController();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SmartRefresher(
+          controller: controller,
+          header: LinkHeader(linkKey: GlobalKey()),
+          child: ListView.builder(
+            itemCount: 20,
+            itemExtent: 50,
+            itemBuilder: (context, index) => Text('$index'),
+          ),
+        ),
+      ),
+    );
+
+    await controller.requestRefresh(needMove: false);
+    expect(controller.headerStatus, RefreshStatus.refreshing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets("test child attribute ", (tester) async {
     final RefreshController _refreshController = RefreshController();
     await tester.pumpWidget(Directionality(

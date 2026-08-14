@@ -256,11 +256,11 @@ class SmartRefresher extends StatefulWidget {
         super(key: key);
 
   static SmartRefresher? of(BuildContext? context) {
-    return context!.findAncestorWidgetOfExactType<SmartRefresher>();
+    return context?.findAncestorWidgetOfExactType<SmartRefresher>();
   }
 
   static SmartRefresherState? ofState(BuildContext? context) {
-    return context!.findAncestorStateOfType<SmartRefresherState>();
+    return context?.findAncestorStateOfType<SmartRefresherState>();
   }
 
   @override
@@ -379,8 +379,12 @@ class SmartRefresherState extends State<SmartRefresher> {
       Key? center;
       double? anchor;
       ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
+      ScrollBehavior? scrollBehavior;
       String? restorationId;
       Clip? clipBehavior;
+      bool shrinkWrap = false;
+      HitTestBehavior hitTestBehavior = HitTestBehavior.opaque;
+      SliverPaintOrder paintOrder = SliverPaintOrder.firstIsTop;
 
       if (childView is ScrollView) {
         primary = primary ?? childView.primary;
@@ -395,8 +399,12 @@ class SmartRefresherState extends State<SmartRefresher> {
         anchor = anchor ?? childView.anchor;
         keyboardDismissBehavior =
             keyboardDismissBehavior ?? childView.keyboardDismissBehavior;
+        scrollBehavior = childView.scrollBehavior;
         restorationId = restorationId ?? childView.restorationId;
         clipBehavior = clipBehavior ?? childView.clipBehavior;
+        shrinkWrap = childView.shrinkWrap;
+        hitTestBehavior = childView.hitTestBehavior;
+        paintOrder = childView.paintOrder;
         scrollController = scrollController ?? childView.controller;
       }
       body = CustomScrollView(
@@ -410,6 +418,10 @@ class SmartRefresherState extends State<SmartRefresher> {
         clipBehavior: clipBehavior ?? Clip.hardEdge,
         keyboardDismissBehavior:
             keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
+        scrollBehavior: scrollBehavior,
+        shrinkWrap: shrinkWrap,
+        hitTestBehavior: hitTestBehavior,
+        paintOrder: paintOrder,
         anchor: anchor ?? 0.0,
         restorationId: restorationId,
         center: center,
@@ -430,7 +442,7 @@ class SmartRefresherState extends State<SmartRefresher> {
         viewportBuilder: (context, offset) {
           Viewport viewport =
               childView.viewportBuilder(context, offset) as Viewport;
-          if (widget.enablePullDown) {
+          if (widget.enablePullDown || widget.enableTwoLevel) {
             viewport.children.insert(
                 0,
                 widget.header ??
@@ -452,27 +464,8 @@ class SmartRefresherState extends State<SmartRefresher> {
     return body;
   }
 
-  bool _ifNeedUpdatePhysics() {
-    RefreshConfiguration? conf = RefreshConfiguration.of(context);
-    if (conf == null || _physics == null) {
-      return false;
-    }
-
-    if (conf.topHitBoundary != _physics!.topHitBoundary ||
-        _physics!.bottomHitBoundary != conf.bottomHitBoundary ||
-        conf.maxOverScrollExtent != _physics!.maxOverScrollExtent ||
-        _physics!.maxUnderScrollExtent != conf.maxUnderScrollExtent ||
-        _physics!.dragSpeedRatio != conf.dragSpeedRatio ||
-        _physics!.enableScrollWhenTwoLevel != conf.enableScrollWhenTwoLevel ||
-        _physics!.enableScrollWhenRefreshCompleted !=
-            conf.enableScrollWhenRefreshCompleted) {
-      return true;
-    }
-    return false;
-  }
-
   void setCanDrag(bool canDrag) {
-    if (_canDrag == canDrag) {
+    if (!mounted || _canDrag == canDrag) {
       return;
     }
     setState(() {
@@ -482,10 +475,16 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   void didUpdateWidget(SmartRefresher oldWidget) {
-    // TODO: implement didUpdateWidget
     if (widget.controller != oldWidget.controller) {
       final oldHeaderStatus = oldWidget.controller.headerStatus;
       final oldFooterStatus = oldWidget.controller.footerStatus;
+      final oldPosition = oldWidget.controller.position;
+
+      oldWidget.controller._detachPosition(this);
+      widget.controller._bindState(this);
+      if (oldPosition != null) {
+        widget.controller.onPositionUpdated(oldPosition);
+      }
       if (oldHeaderStatus != null) {
         widget.controller.headerMode?.value = oldHeaderStatus;
       }
@@ -498,16 +497,16 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    if (_ifNeedUpdatePhysics()) {
+    if (_physics != null) {
       _updatePhysics = !_updatePhysics;
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
+    widget.controller._bindState(this);
     if (widget.controller.initialRefresh) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         //  if mounted,it avoid one situation: when init done,then dispose the widget before build.
@@ -515,14 +514,12 @@ class SmartRefresherState extends State<SmartRefresher> {
         if (mounted) widget.controller.requestRefresh();
       });
     }
-    widget.controller._bindState(this);
-    super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    widget.controller._detachPosition();
+    widget.controller._detachPosition(this);
     super.dispose();
   }
 
@@ -546,7 +543,13 @@ class SmartRefresherState extends State<SmartRefresher> {
     }
     return LayoutBuilder(
       builder: (c2, cons) {
-        viewportExtent = cons.biggest.height;
+        final Axis axis = widget.scrollDirection ??
+            (widget.child is ScrollView
+                ? (widget.child as ScrollView).scrollDirection
+                : Axis.vertical);
+        final double extent =
+            axis == Axis.vertical ? cons.biggest.height : cons.biggest.width;
+        viewportExtent = extent.isFinite ? extent : 0.0;
         return body!;
       },
     );
@@ -561,6 +564,7 @@ class SmartRefresherState extends State<SmartRefresher> {
 /// * [SmartRefresher],a widget help you attach refresh and load more function easily
 class RefreshController {
   SmartRefresherState? _refresherState;
+  bool _requestInProgress = false;
 
   /// header status mode controll
   RefreshNotifier<RefreshStatus>? headerMode;
@@ -611,14 +615,20 @@ class RefreshController {
 
   /// callback when the indicator is builded,and catch the scrollable's inner position
   void onPositionUpdated(ScrollPosition newPosition) {
+    if (identical(position, newPosition)) return;
     position?.isScrollingNotifier.removeListener(_listenScrollEnd);
     position = newPosition;
-    position!.isScrollingNotifier.addListener(_listenScrollEnd);
+    newPosition.isScrollingNotifier.addListener(_listenScrollEnd);
   }
 
-  void _detachPosition() {
+  void _detachPosition([SmartRefresherState? state]) {
+    if (state != null && !identical(_refresherState, state)) return;
     _refresherState = null;
     position?.isScrollingNotifier.removeListener(_listenScrollEnd);
+  }
+
+  bool _isBoundTo(SmartRefresherState state) {
+    return identical(_refresherState, state) && state.mounted;
   }
 
   StatefulElement? _findIndicator(BuildContext context, Type elementType) {
@@ -653,72 +663,102 @@ class RefreshController {
       {bool needMove = true,
       bool needCallback = true,
       Duration duration = const Duration(milliseconds: 500),
-      Curve curve = Curves.linear}) {
-    assert(position != null,
+      Curve curve = Curves.linear}) async {
+    final currentPosition = position;
+    final state = _refresherState;
+    final notifier = headerMode;
+    assert(currentPosition != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (isRefresh) return Future.value();
-    StatefulElement? indicatorElement =
-        _findIndicator(position!.context.storageContext, RefreshIndicator);
-
-    if (indicatorElement == null || _refresherState == null) return null;
-    (indicatorElement.state as RefreshIndicatorState).floating = true;
-
-    if (needMove && _refresherState!.mounted) {
-      _refresherState!.setCanDrag(false);
+    if (currentPosition == null ||
+        state == null ||
+        !state.mounted ||
+        notifier == null ||
+        isRefresh ||
+        isTwoLevel ||
+        _requestInProgress) {
+      return;
     }
-    if (needMove) {
-      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        // - 0.0001 is for NestedScrollView.
-        await position
-            ?.animateTo(position!.minScrollExtent - 0.0001,
-                duration: duration, curve: curve)
-            .then((_) {
-          if (_refresherState != null && _refresherState!.mounted) {
-            _refresherState!.setCanDrag(true);
-            if (needCallback) {
-              headerMode!.value = RefreshStatus.refreshing;
-            } else {
-              headerMode!.setValueWithNoNotify(RefreshStatus.refreshing);
-              if (indicatorElement.state.mounted) {
-                (indicatorElement.state as RefreshIndicatorState)
-                    .setState(() {});
-              }
-            }
-          }
-        });
-      });
-    } else {
-      Future.value().then((_) {
-        headerMode!.value = RefreshStatus.refreshing;
-      });
+    final StatefulElement? indicatorElement = _findIndicator(
+        currentPosition.context.storageContext, RefreshIndicator);
+
+    if (indicatorElement == null) return;
+    _requestInProgress = true;
+    try {
+      (indicatorElement.state as RefreshIndicatorState).floating = true;
+
+      if (needMove) {
+        state.setCanDrag(false);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        final activePosition = position;
+        if (!_isBoundTo(state) || activePosition == null) return;
+        // The tiny offset keeps NestedScrollView from treating this as a no-op.
+        await activePosition.animateTo(activePosition.minScrollExtent - 0.0001,
+            duration: duration, curve: curve);
+        if (!_isBoundTo(state) || headerMode != notifier) return;
+      }
+      if (needCallback) {
+        notifier.value = RefreshStatus.refreshing;
+      } else {
+        notifier.setValueWithNoNotify(RefreshStatus.refreshing);
+        if (indicatorElement.state.mounted) {
+          (indicatorElement.state as RefreshIndicatorState).setState(() {});
+        }
+      }
+    } finally {
+      _requestInProgress = false;
+      if (needMove && _isBoundTo(state) && !isTwoLevel) {
+        state.setCanDrag(true);
+      }
     }
-    return null;
   }
 
   /// make the header enter refreshing state,and callback onRefresh
   Future<void> requestTwoLevel(
       {Duration duration = const Duration(milliseconds: 300),
-      Curve curve = Curves.linear}) {
-    assert(position != null,
+      Curve curve = Curves.linear}) async {
+    final currentPosition = position;
+    final state = _refresherState;
+    final notifier = headerMode;
+    assert(currentPosition != null,
         'Try not to call requestRefresh() before build,please call after the ui was rendered');
-    if (isTwoLevel) return Future.value();
-    final StatefulElement? indicatorElement =
-        _findIndicator(position!.context.storageContext, RefreshIndicator);
+    if (currentPosition == null ||
+        state == null ||
+        !state.mounted ||
+        notifier == null ||
+        isTwoLevel ||
+        isRefresh ||
+        _requestInProgress) {
+      return;
+    }
+    final StatefulElement? indicatorElement = _findIndicator(
+        currentPosition.context.storageContext, RefreshIndicator);
 
-    if (indicatorElement != null) {
+    if (indicatorElement == null) return;
+    _requestInProgress = true;
+    try {
       (indicatorElement.state as RefreshIndicatorState).floating = true;
-    }
-    if (_refresherState?.mounted == true) {
-      _refresherState!.setCanDrag(false);
-    }
-    headerMode!.value = RefreshStatus.twoLevelOpening;
-    return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-      await position?.animateTo(position!.minScrollExtent,
-          duration: duration, curve: curve);
-      if (headerMode?.value != RefreshStatus.twoLevelClosing) {
-        headerMode!.value = RefreshStatus.twoLeveling;
+      state.setCanDrag(false);
+      notifier.value = RefreshStatus.twoLevelOpening;
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      final activePosition = position;
+      if (!_isBoundTo(state) ||
+          activePosition == null ||
+          headerMode != notifier) {
+        return;
       }
-    });
+      await activePosition.animateTo(activePosition.minScrollExtent,
+          duration: duration, curve: curve);
+      if (_isBoundTo(state) &&
+          headerMode == notifier &&
+          notifier.value != RefreshStatus.twoLevelClosing) {
+        notifier.value = RefreshStatus.twoLeveling;
+      }
+    } finally {
+      _requestInProgress = false;
+      if (_isBoundTo(state) && !isTwoLevel) {
+        state.setCanDrag(true);
+      }
+    }
   }
 
   /// make the footer enter loading state,and callback onLoading
@@ -726,41 +766,50 @@ class RefreshController {
       {bool needMove = true,
       bool needCallback = true,
       Duration duration = const Duration(milliseconds: 300),
-      Curve curve = Curves.linear}) {
-    assert(position != null,
+      Curve curve = Curves.linear}) async {
+    final currentPosition = position;
+    final state = _refresherState;
+    final notifier = footerMode;
+    assert(currentPosition != null,
         'Try not to call requestLoading() before build,please call after the ui was rendered');
-    if (isLoading) return Future.value();
-    StatefulElement? indicatorElement =
-        _findIndicator(position!.context.storageContext, LoadIndicator);
-
-    if (indicatorElement == null || _refresherState == null) return null;
-    (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove && _refresherState!.mounted) {
-      _refresherState!.setCanDrag(false);
+    if (currentPosition == null ||
+        state == null ||
+        !state.mounted ||
+        notifier == null ||
+        isLoading ||
+        isTwoLevel ||
+        _requestInProgress) {
+      return;
     }
-    if (needMove) {
-      return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
-        await position
-            ?.animateTo(position!.maxScrollExtent,
-                duration: duration, curve: curve)
-            .then((_) {
-          if (_refresherState != null && _refresherState!.mounted) {
-            _refresherState!.setCanDrag(true);
-            if (needCallback) {
-              footerMode!.value = LoadStatus.loading;
-            } else {
-              footerMode!.setValueWithNoNotify(LoadStatus.loading);
-              if (indicatorElement.state.mounted) {
-                (indicatorElement.state as LoadIndicatorState).setState(() {});
-              }
-            }
-          }
-        });
-      });
-    } else {
-      return Future.value().then((_) {
-        footerMode!.value = LoadStatus.loading;
-      });
+    final StatefulElement? indicatorElement =
+        _findIndicator(currentPosition.context.storageContext, LoadIndicator);
+
+    if (indicatorElement == null) return;
+    _requestInProgress = true;
+    try {
+      (indicatorElement.state as LoadIndicatorState).floating = true;
+      if (needMove) {
+        state.setCanDrag(false);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        final activePosition = position;
+        if (!_isBoundTo(state) || activePosition == null) return;
+        await activePosition.animateTo(activePosition.maxScrollExtent,
+            duration: duration, curve: curve);
+        if (!_isBoundTo(state) || footerMode != notifier) return;
+      }
+      if (needCallback) {
+        notifier.value = LoadStatus.loading;
+      } else {
+        notifier.setValueWithNoNotify(LoadStatus.loading);
+        if (indicatorElement.state.mounted) {
+          (indicatorElement.state as LoadIndicatorState).setState(() {});
+        }
+      }
+    } finally {
+      _requestInProgress = false;
+      if (needMove && _isBoundTo(state) && !isTwoLevel) {
+        state.setCanDrag(true);
+      }
     }
   }
 
@@ -778,13 +827,28 @@ class RefreshController {
   Future<void>? twoLevelComplete(
       {Duration duration = const Duration(milliseconds: 500),
       Curve curve = Curves.linear}) {
-    headerMode?.value = RefreshStatus.twoLevelClosing;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      position!
-          .animateTo(0.0, duration: duration, curve: curve)
-          .whenComplete(() {
-        headerMode!.value = RefreshStatus.idle;
-      });
+    final currentPosition = position;
+    final state = _refresherState;
+    final notifier = headerMode;
+    if (currentPosition == null ||
+        state == null ||
+        !state.mounted ||
+        notifier == null ||
+        !isTwoLevel) {
+      return null;
+    }
+    notifier.value = RefreshStatus.twoLevelClosing;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final activePosition = position;
+      if (!_isBoundTo(state) ||
+          activePosition == null ||
+          headerMode != notifier) {
+        return;
+      }
+      await activePosition.animateTo(0.0, duration: duration, curve: curve);
+      if (_isBoundTo(state) && headerMode == notifier) {
+        notifier.value = RefreshStatus.idle;
+      }
     });
     return null;
   }
@@ -833,6 +897,7 @@ class RefreshController {
   void dispose() {
     if (headerMode == null && footerMode == null) return;
     _detachPosition();
+    position = null;
     headerMode?.dispose();
     footerMode?.dispose();
     headerMode = null;
@@ -986,7 +1051,11 @@ class RefreshConfiguration extends InheritedWidget {
     bool? enableRefreshVibrate,
     bool? enableLoadMoreVibrate,
     bool? hideFooterWhenNotFull,
-  })  : assert(RefreshConfiguration.of(context) != null,
+  })  : assert(headerTriggerDistance == null || headerTriggerDistance > 0),
+        assert(twiceTriggerDistance == null || twiceTriggerDistance > 0),
+        assert(closeTwoLevelDistance == null || closeTwoLevelDistance > 0),
+        assert(dragSpeedRatio == null || dragSpeedRatio > 0),
+        assert(RefreshConfiguration.of(context) != null,
             "search RefreshConfiguration anscestor return null,please  Make sure that RefreshConfiguration is the ancestor of that element"),
         headerBuilder =
             headerBuilder ?? RefreshConfiguration.of(context)!.headerBuilder,
@@ -1042,20 +1111,26 @@ class RefreshConfiguration extends InheritedWidget {
 
   @override
   bool updateShouldNotify(RefreshConfiguration oldWidget) {
-    return skipCanRefresh != oldWidget.skipCanRefresh ||
+    return headerBuilder != oldWidget.headerBuilder ||
+        footerBuilder != oldWidget.footerBuilder ||
+        springDescription != oldWidget.springDescription ||
+        skipCanRefresh != oldWidget.skipCanRefresh ||
         hideFooterWhenNotFull != oldWidget.hideFooterWhenNotFull ||
+        shouldFooterFollowWhenNotFull !=
+            oldWidget.shouldFooterFollowWhenNotFull ||
         dragSpeedRatio != oldWidget.dragSpeedRatio ||
         enableScrollWhenRefreshCompleted !=
             oldWidget.enableScrollWhenRefreshCompleted ||
         enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
+        enableBallisticLoad != oldWidget.enableBallisticLoad ||
         enableScrollWhenTwoLevel != oldWidget.enableScrollWhenTwoLevel ||
+        enableLoadingWhenNoData != oldWidget.enableLoadingWhenNoData ||
         closeTwoLevelDistance != oldWidget.closeTwoLevelDistance ||
         footerTriggerDistance != oldWidget.footerTriggerDistance ||
         headerTriggerDistance != oldWidget.headerTriggerDistance ||
         twiceTriggerDistance != oldWidget.twiceTriggerDistance ||
         maxUnderScrollExtent != oldWidget.maxUnderScrollExtent ||
-        oldWidget.maxOverScrollExtent != maxOverScrollExtent ||
-        enableBallisticRefresh != oldWidget.enableBallisticRefresh ||
+        maxOverScrollExtent != oldWidget.maxOverScrollExtent ||
         enableLoadingWhenFailed != oldWidget.enableLoadingWhenFailed ||
         topHitBoundary != oldWidget.topHitBoundary ||
         enableRefreshVibrate != oldWidget.enableRefreshVibrate ||

@@ -31,39 +31,39 @@ class LinkHeader extends RefreshIndicator {
 }
 
 class _LinkHeaderState extends RefreshIndicatorState<LinkHeader> {
+  RefreshProcessor? get _linkedProcessor {
+    final Key key = widget.linkKey;
+    assert(key is GlobalKey, 'LinkHeader.linkKey must be a GlobalKey.');
+    if (key is! GlobalKey) return null;
+    final State? state = key.currentState;
+    assert(state == null || state is RefreshProcessor,
+        'The state linked by LinkHeader must implement RefreshProcessor.');
+    return state is RefreshProcessor ? state as RefreshProcessor : null;
+  }
+
   @override
   void resetValue() {
-    // TODO: implement resetValue
-    ((widget.linkKey as GlobalKey).currentState as RefreshProcessor)
-        .resetValue();
+    _linkedProcessor?.resetValue();
   }
 
   @override
   Future<void> endRefresh() {
-    // TODO: implement endRefresh
-    return ((widget.linkKey as GlobalKey).currentState as RefreshProcessor)
-        .endRefresh();
+    return _linkedProcessor?.endRefresh() ?? super.endRefresh();
   }
 
   @override
   void onModeChange(RefreshStatus? mode) {
-    // TODO: implement onModeChange
-    ((widget.linkKey as GlobalKey).currentState as RefreshProcessor)
-        .onModeChange(mode);
+    _linkedProcessor?.onModeChange(mode);
   }
 
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
-    ((widget.linkKey as GlobalKey).currentState as RefreshProcessor)
-        .onOffsetChange(offset);
+    _linkedProcessor?.onOffsetChange(offset);
   }
 
   @override
   Future<void> readyToRefresh() {
-    // TODO: implement readyToRefresh
-    return ((widget.linkKey as GlobalKey).currentState as RefreshProcessor)
-        .readyToRefresh();
+    return _linkedProcessor?.readyToRefresh() ?? super.readyToRefresh();
   }
 
   @override
@@ -93,18 +93,39 @@ class LinkFooter extends LoadIndicator {
 }
 
 class _LinkFooterState extends LoadIndicatorState<LinkFooter> {
+  LoadingProcessor? get _linkedProcessor {
+    final Key key = widget.linkKey;
+    assert(key is GlobalKey, 'LinkFooter.linkKey must be a GlobalKey.');
+    if (key is! GlobalKey) return null;
+    final State? state = key.currentState;
+    assert(state == null || state is LoadingProcessor,
+        'The state linked by LinkFooter must implement LoadingProcessor.');
+    return state is LoadingProcessor ? state as LoadingProcessor : null;
+  }
+
   @override
   void onModeChange(LoadStatus? mode) {
-    // TODO: implement onModeChange
-    ((widget.linkKey as GlobalKey).currentState as LoadingProcessor)
-        .onModeChange(mode);
+    _linkedProcessor?.onModeChange(mode);
   }
 
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
-    ((widget.linkKey as GlobalKey).currentState as LoadingProcessor)
-        .onOffsetChange(offset);
+    _linkedProcessor?.onOffsetChange(offset);
+  }
+
+  @override
+  Future readyToLoad() {
+    return _linkedProcessor?.readyToLoad() ?? super.readyToLoad();
+  }
+
+  @override
+  Future endLoading() {
+    return _linkedProcessor?.endLoading() ?? super.endLoading();
+  }
+
+  @override
+  void resetValue() {
+    _linkedProcessor?.resetValue();
   }
 
   @override

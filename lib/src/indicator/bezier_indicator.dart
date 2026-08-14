@@ -23,7 +23,7 @@ enum BezierCircleType { Raidal, Progress }
 /// [BezierCircleHeader], bezier container +circle progress indicator
 class BezierHeader extends RefreshIndicator {
   final OffsetCallBack? onOffsetChange;
-  final ModeChangeCallBack? onModeChange;
+  final ModeChangeCallBack<RefreshStatus>? onModeChange;
   final VoidFutureCallBack? readyRefresh, endRefresh;
   final VoidCallback? onResetValue;
   final Color? bezierColor;
@@ -367,6 +367,7 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
         _childMoveCtl.reset();
       },
       onModeChange: (m) {
+        if (m == null || !mounted) return;
         mode = m;
         if (m == RefreshStatus.refreshing) {
           _radialCtrl.repeat(period: Duration(milliseconds: 500));

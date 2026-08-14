@@ -147,7 +147,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
                 ? refresherState!.viewportExtent
                 : widget.height)
             : 0.0) -
-        (_position?.pixels as num);
+        (_position?.pixels ?? 0.0);
   }
 
   @override
@@ -200,8 +200,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         } else {
           floating = true;
           update();
+          final RefreshStatus? pendingMode = mode;
           readyToRefresh().then((_) {
-            if (!mounted) return;
+            if (!mounted || mode != pendingMode) return;
             mode = RefreshStatus.refreshing;
           });
         }
@@ -221,8 +222,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
         // refreshing
         floating = true;
         update();
+        final RefreshStatus? pendingMode = mode;
         readyToRefresh().then((_) {
-          if (!mounted) return;
+          if (!mounted || mode != pendingMode) return;
           mode = RefreshStatus.refreshing;
         });
       }
@@ -251,8 +253,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
       if (mode == RefreshStatus.idle) refresherState!.setCanDrag(true);
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
+      final RefreshStatus? terminalMode = mode;
       endRefresh().then((_) {
-        if (!mounted) return;
+        if (!mounted || mode != terminalMode) return;
         floating = false;
         if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
           refresherState!
@@ -266,7 +269,7 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
           2. As FrontStyle,when user dragging in 0~100 in refreshing state,it should be reset after the state change
           */
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) {
+          if (!mounted || mode != terminalMode) {
             return;
           }
           if (widget.refreshStyle == RefreshStyle.Front) {
@@ -304,7 +307,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.linear)
             .whenComplete(() {
-          mode = RefreshStatus.twoLeveling;
+          if (mounted && mode == RefreshStatus.twoLevelOpening) {
+            mode = RefreshStatus.twoLeveling;
+          }
         });
         if (refresher!.onTwoLevel != null) refresher!.onTwoLevel!(true);
       });

@@ -1,3 +1,9 @@
+## 3.5.0
+* Fix controller rebinding and concurrent refresh or loading requests.
+* Improve refresh physics, two-level transitions, and async lifecycle safety.
+* Preserve ScrollView settings and support shrink-wrapped sliver layouts.
+* Fix indicator resource leaks and improve configuration update handling.
+
 ## 3.3.0
 * Improve null safety for refresh controllers and indicator states.
 * Fix refresh physics and two-level scrolling behavior.
